@@ -55,6 +55,10 @@ export default {
   },
   methods: {
     async register() {
+      const id = toast.loading("Pending...", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+
       try {
         await axiosInstance
           .post("/login", {
@@ -62,9 +66,13 @@ export default {
             password: this.password,
           })
           .then(() => {
-            toast.success("Login successful!", {
+            toast.update(id, {
+              closeOnClick: true,
+              closeButton: true,
+              type: "success",
+              isLoading: false,
+              render: "Login successful!",
               autoClose: 5000,
-              position: toast.POSITION.TOP_RIGHT,
             });
           });
 
@@ -82,9 +90,13 @@ export default {
               this.errorMessages = this.errorMessages.concat(messages[field]);
             }
           }
-          toast.error("Wrong email or password.", {
+          toast.update(id, {
             autoClose: 5000,
-            position: toast.POSITION.TOP_RIGHT,
+            closeOnClick: true,
+            closeButton: true,
+            type: "error",
+            isLoading: false,
+            render: "Wrong credentials.",
           });
         }
       }

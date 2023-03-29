@@ -94,6 +94,10 @@ export default {
   },
   methods: {
     async register() {
+      const id = toast.loading("Pending...", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+
       try {
         await axiosInstance
           .post("/register", {
@@ -103,9 +107,13 @@ export default {
             c_password: this.c_password,
           })
           .then(() => {
-            toast.success("Registration successful!", {
+            toast.update(id, {
+              closeOnClick: true,
+              closeButton: true,
+              type: "success",
+              isLoading: false,
+              render: "Registration successful!",
               autoClose: 5000,
-              position: toast.POSITION.TOP_RIGHT,
             });
           });
 
@@ -123,9 +131,13 @@ export default {
               this.errorMessages = this.errorMessages.concat(messages[field]);
             }
           }
-          toast.error("There were errors during registration.", {
+          toast.update(id, {
             autoClose: 5000,
-            position: toast.POSITION.TOP_RIGHT,
+            closeOnClick: true,
+            closeButton: true,
+            type: "error",
+            isLoading: false,
+            render: "Could not register. Look at the errors down below.",
           });
         }
       }
